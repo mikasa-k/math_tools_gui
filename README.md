@@ -1,1 +1,2 @@
-# math_tools_gui
+# Math_tools for KIT
+北見工業大学の「統計学入門」で登場する問題を解答することを想定しました。
