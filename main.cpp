@@ -461,10 +461,12 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hwnd , &ps);
 			HDC buffer_haruhi = CreateCompatibleDC(hdc);
-			SelectObject(buffer_haruhi, bmp_haruhi);
+			HBITMAP oldbit = (HBITMAP)SelectObject(buffer_haruhi, bmp_haruhi);
 			BitBlt(hdc , WIDTH -300 -haruhip, HEIGHT -330, WIDTH, HEIGHT, buffer_haruhi, 0, 0 , SRCCOPY);
 			DeleteDC(buffer_haruhi);
 			DrawIcon(hdc, WIDTH -40, 5, hLargeIcon);
+			SelectObject(hdc, oldbit);
+			DeleteObject(buffer_haruhi);
 			EndPaint(hwnd, &ps);
 			ReleaseDC(hwnd, hdc);
 			print_text(hwnd, "入力欄:", 10, 80, 20, RGB(0,0,0), 0);
@@ -502,7 +504,7 @@ static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 
 /* main */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd){
-	HANDLE hMutex = CreateMutexW(NULL, TRUE, L"KIT-SOS_dan_math_tools_gui2.0.0");
+	HANDLE hMutex = CreateMutexW(NULL, TRUE, L"KIT-SOS_dan_math_tools_gui3.2.0");
 	if (GetLastError() == ERROR_ALREADY_EXISTS){
 		return 0;
 	}

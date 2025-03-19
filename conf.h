@@ -129,15 +129,16 @@ class PrintText{
 		std::wstring s = to_wide(string);
 		int n = s.length();
 		HFONT hFont = this->set_font(font_size);
-		SelectObject(hdc, hFont);
+		HFONT oldfont = (HFONT)SelectObject(hdc, hFont);
 		TextOutW(hdc, this->x, this->y, s.c_str(), n);
 		this->str = string;
 		this->rect = {this->x, this->y, this->x + n * font_size, this->y + font_size};
 		this->fs = font_size;
 		this->fg = font_color;
 		this->bg = background_color;
-		ReleaseDC(this->hwnd, hdc);
+		SelectObject(hdc, oldfont);
 		DeleteObject(hFont);
+		ReleaseDC(this->hwnd, hdc);
 	}
 };
 void print_text(HWND hwnd, std::string str, int x, int y, int fsize, int fg, int bg){
@@ -150,8 +151,10 @@ void print_text(HWND hwnd, std::string str, int x, int y, int fsize, int fg, int
 	}
 	int n = to_wide(str).length();
 	HFONT hFont = PrintText::set_font(fsize);
-	SelectObject(hdc, hFont);
+	HFONT oldfont = (HFONT)SelectObject(hdc, hFont);
 	TextOutW(hdc, x, y, to_wide(str).c_str(), n);
+	SelectObject(hdc, oldfont);
+	DeleteObject(hFont);
 	ReleaseDC(hwnd, hdc);
 }
 
